@@ -1,8 +1,8 @@
-const questionController = require('../controllers/question');
+const questionController = require('../controllers/question')
 
-module.exports = (app) => {
-
-  app.route('/v1/questions')
+module.exports = app => {
+  app
+    .route('/v1/questions')
     .get(questionController.allQuestions)
-    .post(questionController.newQuestion);
+    .post(questionController.newQuestion)
 }

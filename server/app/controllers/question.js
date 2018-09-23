@@ -1,22 +1,24 @@
-const mongoose = require('mongoose');
-const modelQuestion = mongoose.model('question');
+const mongoose = require('mongoose')
 
-let questionController = {};
+const QuestionModel = mongoose.model('question')
+
+const questionController = {}
 
 questionController.allQuestions = (req, res) => {
-
-  modelQuestion.find()
+  QuestionModel.find()
     .then(results => res.json(results))
-    .catch(err => res.json({ success: false, message: err, statusCode: 500 }));
+    .catch(err => res.json({ success: false, message: err, statusCode: 500 }))
 }
 
 questionController.newQuestion = (req, res) => {
+  const newQuestion = new QuestionModel(req.body)
 
-  let newQuestion = new modelQuestion(req.body);
-
-  newQuestion.save()
-    .then(() => res.json({ success: true, message: 'Question created with success!', statusCode: 201 }))
-    .catch(err => res.json({ success: false, message: err, statusCode: 500 }));
+  newQuestion
+    .save()
+    .then(() =>
+      res.json({ success: true, message: 'Question created with success!', statusCode: 201 })
+    )
+    .catch(err => res.json({ success: false, message: err, statusCode: 500 }))
 }
 
-module.exports = questionController;
+module.exports = questionController

@@ -1,5 +1,5 @@
-jwtConfig = {
-  'secret': 'y0uR-s3cr3t'
+const jwtConfig = {
+  secret: 'y0uR-s3cr3t',
 }
 
-module.exports = jwtConfig;
+module.exports = jwtConfig

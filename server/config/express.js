@@ -33,7 +33,7 @@ module.exports = () => {
     .then('routes')
 
     .into(app)
-  app.get('*', function response(req, res) {
+  app.get('*', (req, res) => {
     res.sendFile(app.get('index'))
   })
 
