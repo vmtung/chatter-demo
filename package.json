@@ -4,7 +4,7 @@
   "description": "A minimal NodeJS server and React client boilerplate with parcel as bundler",
   "main": "index.js",
   "scripts": {
-    "start": "rm -rf ./client/dist & parcel watch ./client/src/index.html --out-dir ./client/dist --public-url ./ & nodemon index.js",
+    "start": "rm -rf ./client/dist & parcel watch ./client/src/index.html --out-dir ./client/dist --public-url /client & nodemon index.js",
     "build": "rm -rf ./client/build & parcel build ./client/src/index.html --out-dir client/build --public-url /client",
     "prod": "NODE_ENV=production nodemon index.js",
     "build-prod": "npm run build & npm run prod"
