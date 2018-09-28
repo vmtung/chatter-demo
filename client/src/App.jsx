@@ -2,8 +2,6 @@ import React, { Component } from 'react'
 import logo from './logo.svg'
 import AppStyle from './App.css'
 
-console.log('AppStyle', AppStyle)
-
 class App extends Component {
   render() {
     return (
