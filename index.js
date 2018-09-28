@@ -1,3 +1,4 @@
+require('dotenv').config()
 const app = require('./server/config/express')()
 
 require('./server/config/database')
