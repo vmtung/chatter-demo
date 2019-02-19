@@ -2,5 +2,7 @@ const passport = require('passport')
 const helper = require('../../config/passport')
 
 module.exports = app => {
-  app.use(helper.setup(passport))
+  helper.setup(passport)
+  app.use(passport.initialize())
+  app.use(passport.session())
 }

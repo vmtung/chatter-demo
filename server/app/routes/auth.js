@@ -144,6 +144,10 @@ const loginRoute = (req, res, next) => {
 }
 
 module.exports = app => {
-  app.route('/login').post(loginRoute)
-  app.route('/signup').post(signupRoute)
+  app.route('/auth/login').post(loginRoute)
+  app.route('/auth/signup').post(signupRoute)
+  app.route('/auth/me').get((req, res) => {
+    console.log(req.user)
+    res.json({ _id: req.user && req.user._id, email: req.user && req.user.email })
+  })
 }
