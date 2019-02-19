@@ -38,5 +38,6 @@ module.exports = {
       },
     ],
     'no-underscore-dangle': 0,
+    'no-unused-vars': 1
   },
 }
