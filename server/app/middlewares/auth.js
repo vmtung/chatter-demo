@@ -4,5 +4,4 @@ const helper = require('../../config/passport')
 module.exports = app => {
   helper.setup(passport)
   app.use(passport.initialize())
-  app.use(passport.session())
 }
