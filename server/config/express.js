@@ -22,11 +22,16 @@ module.exports = () => {
   }
 
   app.use(cors())
+
+  // check auth token
   app.use((req, res, next) => {
     const authToken = req.get('auth-token')
     if (authToken) {
-      const { user } = jwt.verify(req.get('auth-token'), jwtConfig.secret) || {}
-      req.user = user
+      const { user, expired } = jwt.verify(req.get('auth-token'), jwtConfig.secret) || {}
+      if (new Date() <= new Date(expired)) {
+        // still good
+        req.user = user
+      }
     }
     next()
   })

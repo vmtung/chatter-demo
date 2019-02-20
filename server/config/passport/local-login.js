@@ -53,6 +53,7 @@ module.exports = new PassportLocalStrategy(
         const payload = {
           user: data,
           date: new Date(),
+          expired: new Date(Date.now() + 1000 * 3600 * 24 * 30),
         }
 
         // create a token string
