@@ -38,6 +38,7 @@ module.exports = {
       },
     ],
     'no-underscore-dangle': 0,
-    'no-unused-vars': 1
+    'no-unused-vars': 1,
+    'no-use-before-define': [2, "nofunc"]
   },
 }
