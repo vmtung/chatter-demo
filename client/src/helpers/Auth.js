@@ -1,11 +1,22 @@
 import axios from 'axios'
+import { axiosGet, axiosPost } from './AxiosWrap'
 
 let authCallbacks = []
-// Auth.signupUser('test@test.com', '12345678', 'test')
-// Auth.loginUser('test@test.com', '12345678')
+let currentUser = null
 
-// TODO: add check user login by calling to server, and trigger callback if token invalid
-const isUserAuthenticated = () => localStorage.getItem('token') !== null
+function isUserAuthenticated() {
+  const hasToken = localStorage.getItem('token') !== null
+  if (hasToken) {
+    axiosGet('/auth/me').then(res => {
+      if (res.data && res.data._id) {
+        currentUser = res.data
+      } else {
+        logoutUser()
+      }
+    })
+  }
+  return hasToken
+}
 
 const triggerCbs = value => {
   const isAuthed = value !== undefined ? value : isUserAuthenticated()
@@ -30,17 +41,17 @@ const deauthenticateUser = () => {
 }
 
 export const loginUser = (email, password) =>
-  axios
-    .post('/auth/login', {
-      email,
-      password,
-    })
-    .then(res => authenticateUser(res.data.token))
+  axiosPost('/auth/login', {
+    email,
+    password,
+  }).then(res => authenticateUser(res.data.token))
 
-export const logoutUser = () => deauthenticateUser()
+export function logoutUser() {
+  return deauthenticateUser()
+}
 
 export const signupUser = (email, password, name) =>
-  axios.post('/auth/signup', {
+  axiosPost('/auth/signup', {
     email,
     password,
     name,
@@ -52,6 +63,8 @@ export const onAuthChanged = cb => {
   authCallbacks = newCbs.filter(item => typeof item === 'function')
   cb(isUserAuthenticated())
 }
+
+export const getCurrentUser = () => currentUser
 
 // loginUser('test@test.com', '12345678').then(() =>
 //   axios.get('/auth/me').then(res => console.log('me', res))
