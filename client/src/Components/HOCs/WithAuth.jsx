@@ -8,11 +8,15 @@ export default function withAuth(Comp) {
     }
 
     componentDidMount() {
-      onAuthChanged(isAuthed => {
+      this.stopSub = onAuthChanged(isAuthed => {
         this.setState({
           authed: isAuthed,
         })
       })
+    }
+
+    componentWillUnmount() {
+      if (this.stopSub) this.stopSub()
     }
 
     render() {

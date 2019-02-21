@@ -65,10 +65,12 @@ export const signupUser = (email, password, name) =>
   })
 
 export const onAuthChanged = cb => {
-  if (typeof cb !== 'function') return
-  const newCbs = [...authCallbacks, cb]
-  authCallbacks = newCbs.filter(item => typeof item === 'function')
+  if (typeof cb !== 'function') return null
+  authCallbacks = [...authCallbacks, cb]
   cb(isUserAuthenticated())
+  return function() {
+    authCallbacks = authCallbacks.filter(item => item !== cb)
+  }
 }
 
 export const getCurrentUser = () => currentUser
