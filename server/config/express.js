@@ -4,8 +4,7 @@ const bodyParser = require('body-parser')
 const cors = require('cors')
 const path = require('path')
 const compression = require('compression')
-const jwt = require('jsonwebtoken')
-const jwtConfig = require('./jwt')
+const jwtHelpers = require('../helpers/jwt')
 
 module.exports = () => {
   const app = express()
@@ -27,11 +26,7 @@ module.exports = () => {
   app.use((req, res, next) => {
     const authToken = req.get('auth-token')
     if (authToken) {
-      const { user, expired } = jwt.verify(req.get('auth-token'), jwtConfig.secret) || {}
-      if (new Date() <= new Date(expired)) {
-        // still good
-        req.user = user
-      }
+      req.user = jwtHelpers.getUserFromToken(req.get('auth-token'))
     }
     next()
   })
