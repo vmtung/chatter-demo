@@ -1,5 +1,12 @@
 import axios from 'axios'
+import io from 'socket.io-client'
 import { axiosGet, axiosPost } from './AxiosWrap'
+
+const socket = io.connect()
+socket.on('news', data => {
+  console.log(data)
+  socket.emit('my other event', { my: 'data' })
+})
 
 let authCallbacks = []
 let currentUser = null

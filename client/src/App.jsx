@@ -16,7 +16,7 @@ import {
 import WithAuth from './Components/HOCs/WithAuth'
 import Header from './Components/Header'
 import HomePage from './Components/HomePage'
-import TestPage from './Components/TestPage'
+import ChatPage from './Components/ChatPage'
 
 const CustomRoute = WithAuth(({ component: Comp, isPrivate, isLoggedOut, ...rest }) => {
   const needAuth = isPrivate || isLoggedOut
@@ -53,7 +53,7 @@ class Main extends Component {
         <div>
           <Header />
           <CustomRoute exact path="/" component={HomePage} />
-          <CustomRoute isPrivate exact path="/test" component={TestPage} />
+          <CustomRoute isPrivate exact path="/test" component={ChatPage} />
           {/* 
           <MultiRoute isPrivate path="/dashboard" component={DashboardPage} />
           <MultiRoute isLoggedOut path="/login" component={LoginPage} /> */}
