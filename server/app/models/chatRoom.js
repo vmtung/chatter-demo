@@ -2,7 +2,7 @@ const mongoose = require('mongoose')
 
 const { Schema } = mongoose
 
-const questionSchema = new Schema({
+const chatRoomSchema = new Schema({
   members: {
     type: [
       new Schema({
@@ -39,10 +39,38 @@ const questionSchema = new Schema({
     // required: true,
   },
 
+  _created_by: {
+    type: Schema.Types.ObjectId,
+  },
+
   _created_at: {
     type: Date,
     default: Date.now,
   },
 })
 
-mongoose.model('question', questionSchema)
+const ChatRoomModel = mongoose.model('chatRoom', chatRoomSchema)
+
+chatRoomSchema.statics.createRoom = function createRoom(creatorId, memberIds) {
+  return new Promise((resolve, reject) => {
+    ChatRoomModel.create(
+      {
+        members: [
+          {
+            userId: creatorId,
+            role: 'creator',
+          },
+          ...memberIds.map(userId => ({
+            userId,
+            role: 'member',
+          })),
+        ],
+        _created_by: creatorId,
+      },
+      (err, newRoom) => {
+        if (err) reject(err)
+        else resolve(newRoom)
+      }
+    )
+  })
+}
