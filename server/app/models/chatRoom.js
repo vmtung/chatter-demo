@@ -1,4 +1,5 @@
 const mongoose = require('mongoose')
+const User = require('mongoose').model('User')
 
 const { Schema } = mongoose
 
@@ -51,7 +52,17 @@ const chatRoomSchema = new Schema({
 
 const ChatRoomModel = mongoose.model('chatRoom', chatRoomSchema)
 
-chatRoomSchema.statics.createRoom = function createRoom(creatorId, memberIds) {
+/**
+ * @param  {Schema.Types.ObjectId} creatorId
+ * @param  {[Schema.Types.ObjectId]} memberIds
+ */
+chatRoomSchema.statics.createRoom = async function createRoom(creatorId, memberIds) {
+  const members = await User.find({
+    _id: {
+      $in: memberIds,
+    },
+  }).exec()
+  if (members.length === 0) return Promise.reject(new Error('Users not found'))
   return new Promise((resolve, reject) => {
     ChatRoomModel.create(
       {
@@ -60,8 +71,8 @@ chatRoomSchema.statics.createRoom = function createRoom(creatorId, memberIds) {
             userId: creatorId,
             role: 'creator',
           },
-          ...memberIds.map(userId => ({
-            userId,
+          ...members.map(user => ({
+            userId: user._id,
             role: 'member',
           })),
         ],
