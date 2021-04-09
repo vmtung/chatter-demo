@@ -1,30 +1,22 @@
 const socketIO = require('socket.io')
-const jwtHelpers = require('../helpers/jwt')
-
-const userIdSocketMap = {}
+const User = require('mongoose').model('User')
 
 module.exports = app => {
   const io = socketIO(app)
 
   io.on('connection', socket => {
-    socket.on('map-id', data => {
-      const { authToken } = data
-      const user = jwtHelpers.getUserFromToken(authToken)
-      const userId = user && user._id
-
-      if (userId) {
-        userIdSocketMap[userId] = socket.id
-      }
-    })
-    socket.on('direct-chat', data => {
-      const { targetId, authToken, msg } = data
-      const user = jwtHelpers.getUserFromToken(authToken)
-      const fromId = user && user._id
-
-      const targetSocketId = userIdSocketMap[targetId]
-      if (fromId && targetSocketId) {
+    socket.on('direct-chat', async data => {
+      const { targetId, msg } = data
+      const [user, targetUser] = await Promise.all([
+        User.findOne({
+          socketId: socket.id,
+        }),
+        User.findById(targetId),
+      ])
+      if (user && targetUser) {
+        const targetSocketId = targetUser.socketId
         socket.broadcast.to(targetSocketId).emit('direct-chat', {
-          fromId,
+          from: user,
           msg,
         })
       }

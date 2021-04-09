@@ -1,12 +1,5 @@
 import axios from 'axios'
-import io from 'socket.io-client'
 import { axiosGet, axiosPost } from './AxiosWrap'
-
-const socket = io.connect()
-socket.on('news', data => {
-  console.log(data)
-  socket.emit('my other event', { my: 'data' })
-})
 
 let authCallbacks = []
 let currentUser = null
@@ -51,7 +44,10 @@ export const loginUser = (email, password) =>
   axiosPost('/auth/login', {
     email,
     password,
-  }).then(res => authenticateUser(res.data.token))
+  }).then(res => {
+    console.log('res', res)
+    return authenticateUser(res.data.token)
+  })
 
 export function logoutUser() {
   return deauthenticateUser()
@@ -62,6 +58,9 @@ export const signupUser = (email, password, name) =>
     email,
     password,
     name,
+  }).then(res => {
+    console.log('res', res)
+    return loginUser(email, password)
   })
 
 export const onAuthChanged = cb => {

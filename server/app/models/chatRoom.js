@@ -1,5 +1,4 @@
 const mongoose = require('mongoose')
-const User = require('mongoose').model('User')
 
 const { Schema } = mongoose
 
@@ -57,6 +56,7 @@ const ChatRoomModel = mongoose.model('chatRoom', chatRoomSchema)
  * @param  {[Schema.Types.ObjectId]} memberIds
  */
 chatRoomSchema.statics.createRoom = async function createRoom(creatorId, memberIds) {
+  const User = require('mongoose').model('User')
   const members = await User.find({
     _id: {
       $in: memberIds,

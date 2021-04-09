@@ -1,5 +1,6 @@
 const validator = require('validator')
 const passport = require('passport')
+const User = require('mongoose').model('User')
 
 /**
  * Validate the sign up form
@@ -73,6 +74,7 @@ function validateLoginForm(payload) {
 }
 
 const signupRoute = (req, res, next) => {
+  console.log('req.body', req.body)
   const validationResult = validateSignupForm(req.body)
   if (!validationResult.success) {
     return res.status(400).json({
@@ -81,6 +83,8 @@ const signupRoute = (req, res, next) => {
       errors: validationResult.errors,
     })
   }
+
+  console.log('validationResult', validationResult)
 
   return passport.authenticate('local-signup', err => {
     if (err) {
@@ -95,6 +99,7 @@ const signupRoute = (req, res, next) => {
           },
         })
       }
+      console.log('err', err)
 
       return res.status(400).json({
         success: false,
@@ -142,6 +147,21 @@ const loginRoute = (req, res, next) => {
     })
   })(req, res, next)
 }
+const mapSocketRoute = (req, res, next) => {
+  if (req.user && req.body.socketId) {
+    User.updateOne(
+      {
+        _id: req.user._id,
+      },
+      {
+        $set: {
+          socketId: req.body.socketId,
+        },
+      }
+    )
+  }
+  res.status(200)
+}
 
 module.exports = app => {
   app.route('/auth/login').post(loginRoute)
@@ -149,4 +169,5 @@ module.exports = app => {
   app.route('/auth/me').get((req, res) => {
     res.json({ _id: req.user && req.user._id, email: req.user && req.user.email })
   })
+  app.route('/auth/socket').post(mapSocketRoute)
 }

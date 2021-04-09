@@ -26,7 +26,11 @@ module.exports = () => {
   app.use((req, res, next) => {
     const authToken = req.get('auth-token')
     if (authToken) {
-      req.user = jwtHelpers.getUserFromToken(req.get('auth-token'))
+      try {
+        req.user = jwtHelpers.getUserFromToken(req.get('auth-token'))
+      } catch(e) {
+        console.error(e)
+      }
     }
     next()
   })
